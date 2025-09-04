@@ -12,6 +12,11 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
+    # --- THIS IS THE FIX ---
+    # Grant the job permissions to write to the repository's contents (i.e., upload release assets)
+    permissions:
+      contents: write
+
     steps:
       - name: Check out code
         uses: actions/checkout@v3
@@ -27,15 +32,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install pyinstaller -r requirements.txt
 
-      # --- THIS IS THE KEY CHANGE (PART 1) ---
-      # We give the step an ID and write to GITHUB_OUTPUT
       - name: Get FFmpeg Path
-        id: ffmpeg_step # ADDED: Give the step a unique ID
+        id: ffmpeg_step
         shell: bash
         run: echo "ffmpeg_path=$(python -c 'import imageio_ffmpeg; print(imageio_ffmpeg.get_ffmpeg_exe())')" >> $GITHUB_OUTPUT
 
-      # --- THIS IS THE KEY CHANGE (PART 2) ---
-      # We now access the variable using the step's ID and its outputs
       - name: Build with PyInstaller (Windows)
         if: runner.os == 'Windows'
         shell: bash 
@@ -49,7 +50,6 @@ jobs:
           OS_NAME=$(echo ${{ runner.os }} | tr '[:upper:]' '[:lower:]')
           pyinstaller --onefile --name load-$OS_NAME --add-data "${{ steps.ffmpeg_step.outputs.ffmpeg_path }}:imageio_ffmpeg/binaries" main_cli.py
 
-      # --- Uploader steps remain the same but are now more likely to run! ---
       - name: Upload Windows Asset
         if: runner.os == 'Windows'
         uses: actions/upload-release-asset@v1
