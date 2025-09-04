@@ -104,8 +104,8 @@ If you'd like to run the project from the source code, follow these steps:
 
 ## License
 
-This project is licensed under the GNU General Public License v3.0. See the (LICENSE)[] file for the full license text.
+This project is licensed under the GNU General Public License v3.0. See the [LICENSE](./LICENSE) file for the full license text.
 
 ---
 
-Created with ❤️ by **khomod** for the **ZainOS Project**.
+Created by **khomod** for the **ZainOS Project**.
