@@ -1,0 +1,88 @@
+# A descriptive name for your workflow
+name: Build Standalone Executables
+
+# This tells GitHub to run the workflow ONLY when a new release is created
+on:
+  release:
+    types: [created]
+
+# This section defines the jobs to be run. We'll have one main job.
+jobs:
+  build-executables:
+    # This is the magic: The "matrix" strategy runs the same steps
+    # on different operating systems in parallel.
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+
+    # Use the operating system from the matrix for this job run
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      # Step 1: Check out your repository's code
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up the correct version of Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      # Step 3: Install your project's dependencies and PyInstaller
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller -r requirements.txt
+
+      # Step 4: Dynamically find the path to the ffmpeg executable.
+      # This is the key to bundling it correctly on each OS.
+      - name: Get FFmpeg Path
+        run: echo "FFMPEG_PATH=$(python -c 'import imageio_ffmpeg; print(imageio_ffmpeg.get_ffmpeg_exe())')" >> $GITHUB_ENV
+
+      # Step 5: Build the executable using PyInstaller
+      # We use 'if' conditions to handle the different path separators and file extensions.
+      - name: Build with PyInstaller (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          pyinstaller --onefile --name load-windows --add-data "${{ env.FFMPEG_PATH }};imageio_ffmpeg/binaries" main_cli.py
+
+      - name: Build with PyInstaller (macOS & Linux)
+        if: runner.os != 'Windows'
+        run: |
+          pyinstaller --onefile --name load-${{ runner.os }} --add-data "${{ env.FFMPEG_PATH }}:imageio_ffmpeg/binaries" main_cli.py
+
+      # Step 6: Upload the built executable as a release asset
+      # This attaches the final file to your GitHub Release page.
+      - name: Upload Windows Asset
+        if: runner.os == 'Windows'
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./dist/load-windows.exe
+          asset_name: load-windows.exe
+          asset_content_type: application/vnd.microsoft.portable-executable
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload macOS Asset
+        if: runner.os == 'macOS'
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./dist/load-macOS
+          asset_name: load-macos
+          asset_content_type: application/octet-stream
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Upload Linux Asset
+        if: runner.os == 'Linux'
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./dist/load-Linux
+          asset_name: load-linux
+          asset_content_type: application/octet-stream
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
