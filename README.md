@@ -20,10 +20,10 @@ TODO: Create a short GIF of the app in action and replace the image below.
 It should show the welcome screen, entering a URL, selecting video, and the progress bar.
 -->
 <p align="center">
-  <img src="[https://i.imgur.com/your-gif-url-here.gif](https://i.postimg.cc/gcCT2qS2/Screenshot-2025-09-04-184544.png)" alt="Load CLI Demo">
+  <img src="https://i.postimg.cc/gcCT2qS2/Screenshot-2025-09-04-184544.png" alt="Load CLI Demo">
 </p>
 
-## ✨ Features
+## Features
 
 *   **Download Video:** Choose from a list of available MP4 video qualities.
 *   **Extract High-Quality Audio:** Save audio tracks directly to `mp3`, `wav`, or `flac`.
@@ -31,11 +31,11 @@ It should show the welcome screen, entering a URL, selecting video, and the prog
 *   **Zero Dependencies:** The executables are self-contained. No need to install Python or FFmpeg!
 *   **Cross-Platform:** Pre-built binaries are available for Windows, macOS, and Linux.
 
-## 🚀 Get Started (No Installation Needed)
+## Get Started (No Installation Needed)
 
 You can download the latest version of `load` for your operating system directly from the releases page.
 
-**[➡️ Go to the Latest Release Page](https://github.com/omar-Suleiman14/load/releases/latest)**
+**[➡ Go to the Latest Release Page](https://github.com/omar-Suleiman14/load/releases/latest)**
 
 ### For Windows Users
 
@@ -74,7 +74,7 @@ You can download the latest version of `load` for your operating system directly
     ./load-linux
     ```
 
-## 👨‍💻 For Developers (Running from Source)
+## For Developers (Running from Source)
 
 If you'd like to run the project from the source code, follow these steps:
 
@@ -104,7 +104,7 @@ If you'd like to run the project from the source code, follow these steps:
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
 
 ---
 
