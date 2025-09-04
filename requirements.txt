@@ -1,0 +1,6 @@
+# Core downloader
+yt-dlp
+imageio-ffmpeg
+
+# CLI dependencies
+rich
